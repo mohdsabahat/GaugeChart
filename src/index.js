@@ -1,4 +1,4 @@
-import CreateChart from './createChart';
+import CreateChart from './CreateChart';
 
 export {
     CreateChart,
