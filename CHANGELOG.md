@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/mohdsabahat/GaugeChart/compare/v1.0.0...v1.1.0) (2025-03-10)
+
+
+### Features
+
+* **CreateChart:** add detailed method documentation and text wrapping for value label ([9a45e01](https://github.com/mohdsabahat/GaugeChart/commit/9a45e01ff87b9d8d0dfc906be7915cca61df91bc))
+
 # 1.0.0 (2025-03-10)
 
 
