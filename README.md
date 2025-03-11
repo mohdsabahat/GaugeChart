@@ -1,3 +1,7 @@
+![Release](https://github.com/mohdsabahat/GaugeChart/actions/workflows/release.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue)
+![Github Version](https://img.shields.io/github/v/release/mohdsabahat/prayer-times)
+
 # GaugeChart
 
 A pure JavaScript library to create customizable gauge charts.
@@ -10,7 +14,13 @@ A pure JavaScript library to create customizable gauge charts.
 - [License](#license)
 
 ## Usage
+
+Check a basic example here: [https://codepen.io/mohdsabahat/pen/ZYEJMmb](https://codepen.io/mohdsabahat/pen/ZYEJMmb)
+
+
 Include the built JavaScript file in your HTML:
+
+> **Note:** We also provide the bundled minified release to download and use it in your project in the [release page](https://github.com/mohdsabahat/GaugeChart/releases).
 
 ```html
 <script src="gaugeChart.min.js"></script>
@@ -55,8 +65,6 @@ Initialize the gauge chart in your JavaScript:
     gauge.renderChart();
 </script>
 ```
-
-> **Note:** We also provide the bundled minified release to download and use it in your project in the [release page](https://github.com/mohdsabahat/GaugeChart/releases).
 
 ## Configuration
 
