@@ -1,6 +1,6 @@
 ![Release](https://github.com/mohdsabahat/GaugeChart/actions/workflows/release.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue)
-![Github Version](https://img.shields.io/github/v/release/mohdsabahat/prayer-times)
+![Github Version](https://img.shields.io/github/v/release/mohdsabahat/GaugeChart)
 
 # GaugeChart
 
@@ -24,6 +24,8 @@ Include the built JavaScript file in your HTML:
 
 ```html
 <script src="gaugeChart.min.js"></script>
+<!-- Or using CDN -->
+<script src ="https://cdn.jsdelivr.net/gh/mohdsabahat/GaugeChart@master/dist/gaugeChart.min.js"></script>
 ```
 
 Create a canvas element in your HTML:
