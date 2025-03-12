@@ -1,5 +1,5 @@
 import { deepMerge } from './utils';
-
+import needles, {NeedleFactory} from './needles';
 
 class CreateChart {
     constructor(canvas, config){
@@ -9,6 +9,7 @@ class CreateChart {
             startAngle: -Math.PI,
             endAngle: 0,
             thickness: 10,
+            bgColor: '#fff',
             value: {
                 display: true,
                 fontSize: 20,
@@ -36,6 +37,7 @@ class CreateChart {
                 animationSpeed: 1.5,
             },
             needle: {
+                type: needles.DefaultNeedle,
                 needleColor: '#000',
                 needleWidth: 2,
             },
@@ -45,6 +47,16 @@ class CreateChart {
         this.centerX = this.canvas.width / 2;
         this.centerY = (3 * this.canvas.height) / 4;
         this.options.radius = Math.min(canvas.width, canvas.height) / 2 - this.options.thickness -10;
+
+        // Inject dependencies into needle
+        if(this.options.needle.type && typeof this.options.needle.type === 'string'){
+            let NeedleClass = NeedleFactory(this.options.needle.type);
+            this.needle = new NeedleClass(this.context, this.options, this.centerX, this.centerY);
+        } else if(this.options.needle.type && typeof this.options.needle.type === 'function'){
+            this.needle = new this.options.needle.type(this.context, this.options, this.centerX, this.centerY);
+        } else {
+            throw new Error('Needle type is not defined');
+        }
     }
 
     /**
@@ -60,11 +72,14 @@ class CreateChart {
         if(this.options.animation?.animate){
             this._animateRenderChart();
         } else {
+            this.context.fillStyle = this.options.bgColor;
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             this.drawTitle();
             this.drawRegions();
             // calculate the angle for the value to diplay the needle
             const currentAngle = this.options.startAngle + (this.options.endAngle - this.options.startAngle) * this.options.value.value / 100;
-            this.drawNeedle(currentAngle);
+            // this.drawNeedle(currentAngle);
+            this.needle.draw(currentAngle);
             this.drawValueLabel();
         }
     }
@@ -171,42 +186,42 @@ class CreateChart {
         this.context.fill();
     }
 
-    /**
-     * Draws the needle on the gauge chart.
-     *
-     * @param {number} angleRadians - The angle in radians at which the needle should be drawn.
-     */
-    drawNeedle(angleRadians) {
-        const lineLength = this.options.radius;
-        const endX = this.centerX + lineLength * Math.cos(angleRadians);
-        const endY = this.centerY + lineLength * Math.sin(angleRadians);
+    // /**
+    //  * Draws the needle on the gauge chart.
+    //  *
+    //  * @param {number} angleRadians - The angle in radians at which the needle should be drawn.
+    //  */
+    // drawNeedle(angleRadians) {
+    //     const lineLength = this.options.radius;
+    //     const endX = this.centerX + lineLength * Math.cos(angleRadians);
+    //     const endY = this.centerY + lineLength * Math.sin(angleRadians);
   
-        // Draw the needle line
-        this.context.beginPath();
-        this.context.moveTo(this.centerX, this.centerY);
-        this.context.lineTo(endX, endY);
-        this.context.lineWidth = this.options.needle.needleWidth;
-        this.context.strokeStyle = this.options.needle.needleColor;
-        this.context.stroke();
+    //     // Draw the needle line
+    //     this.context.beginPath();
+    //     this.context.moveTo(this.centerX, this.centerY);
+    //     this.context.lineTo(endX, endY);
+    //     this.context.lineWidth = this.options.needle.needleWidth;
+    //     this.context.strokeStyle = this.options.needle.needleColor;
+    //     this.context.stroke();
   
-        // Draw center circle
-        this.context.beginPath();
-        this.context.arc(this.centerX, this.centerY, this.options?.needle.needleWidth, 0, 2 * Math.PI);
-        this.context.fillStyle = '#fff';
-        this.context.fill();
-        this.context.strokeStyle = '#000';
-        this.context.lineWidth = this.options.needle.needleWidth;;
-        this.context.stroke();
+    //     // Draw center circle
+    //     this.context.beginPath();
+    //     this.context.arc(this.centerX, this.centerY, this.options?.needle.needleWidth, 0, 2 * Math.PI);
+    //     this.context.fillStyle = '#fff';
+    //     this.context.fill();
+    //     this.context.strokeStyle = '#000';
+    //     this.context.lineWidth = this.options.needle.needleWidth;;
+    //     this.context.stroke();
   
-        // Draw end circle
-        this.context.beginPath();
-        this.context.arc(endX, endY, this.options?.needle.needleWidth, 0, 2 * Math.PI);
-        this.context.fillStyle = '#fff';
-        this.context.fill();
-        this.context.strokeStyle = '#000';
-        this.context.lineWidth = this.options?.needle.needleWidth;
-        this.context.stroke();
-    }
+    //     // Draw end circle
+    //     this.context.beginPath();
+    //     this.context.arc(endX, endY, this.options?.needle.needleWidth, 0, 2 * Math.PI);
+    //     this.context.fillStyle = '#fff';
+    //     this.context.fill();
+    //     this.context.strokeStyle = '#000';
+    //     this.context.lineWidth = this.options?.needle.needleWidth;
+    //     this.context.stroke();
+    // }
 
     /**
      * Draws the value label on the gauge chart.
@@ -281,9 +296,12 @@ class CreateChart {
             const currentAngle = this.options.startAngle + Math.min(progress * this.options.animation.animationSpeed, 1) * (targetAngle - this.options.startAngle);
 
             this.clearCanvas();
+            this.context.fillStyle = this.options.bgColor;
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
             this.drawTitle();
             this.drawRegions();
-            this.drawNeedle(currentAngle);
+            this.needle.draw(currentAngle);
+            // this.drawNeedle(currentAngle);
             this.drawValueLabel();
 
             if (progress < 1) {
